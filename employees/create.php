@@ -15,7 +15,7 @@ if(isset($_POST['add']))
   $insert = "INSERT INTO `employees` VALUES(null,'$name','$email','$password',$depID,'$salary')";
   mysqli_query($connection,$insert);
 
-  path('employees/create.php');
+  path('employees/list.php');
 }
 
  // select dept
@@ -25,6 +25,8 @@ if(isset($_POST['add']))
 
 
 ?>
+<br>
+<br>
 
 <form class="container" action="" method="POST">
   <div class="form-group">

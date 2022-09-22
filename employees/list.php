@@ -18,7 +18,6 @@ include '../shared/navbar.php';
 
      } 
 ?>
-
 <br>
 <br>
 

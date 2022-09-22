@@ -15,7 +15,7 @@ function testMessage($connection,$message){
 function path($go)
 {
     echo "<script>
-    location.replace('/ziad/$go')
+    location.replace('/crudTask/$go')
     </script>";
 }
  ?>
