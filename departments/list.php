@@ -4,15 +4,24 @@ include '../general/functions.php';
 include '../shared/header.php';
 include '../shared/navbar.php';
 
+auth();
+
 $select = "SELECT * FROM dept";
 $s = mysqli_query($connection,$select);
 
 if(isset($_GET['delete']))
 {
+  if ($_SESSION['admin']['adminRole'] != 0) {
+    path('404.php');
+  }
+  else
+  {
   $id = $_GET['delete'];
   $delete = "DELETE FROM dept WHERE id = $id";
   $ss = mysqli_query($connection,$delete);
+  
   path('/departments/list.php');
+}
 }
 
 ?>

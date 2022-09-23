@@ -4,6 +4,8 @@ include '../general/functions.php';
 include '../shared/header.php';
 include '../shared/navbar.php'; 
 
+auth();
+
 if(isset($_GET['edit']))
         {
           $id = $_GET['edit'];
@@ -11,32 +13,40 @@ if(isset($_GET['edit']))
           $employee = mysqli_query($connection,$selectEdit);
           $row = mysqli_fetch_assoc($employee);
 
-          $selectPass = "SELECT mypass from employees where id = $id";
-          $retrievePass = mysqli_query($connection,$selectPass);
-          $row1 = mysqli_fetch_assoc($retrievePass);
-          
-          
-          
-        }
-        if(isset($_POST['update']))
+          if(isset($_POST['update']))
           {
             $name = $_POST['empName'];
             $email = $_POST['empEmail'];
-            $password = $_POST['empPass'];
+            $phone = $_POST['empPhone'];
             $salary = $_POST['empSalary'];
-            $depID = $_POST['depID'];
-            $updateStatement = "UPDATE `employees` SET `name`='$name',`email`='$email',`mypass`='$password',`deptID`=$depID,`salary`='$salary' WHERE id = $id" ;
+            $deptID = $_POST['depID'];
+
+            //image
+            if(empty($_FILES['image']['name']))
+            {
+              $image_name = $row['img_location'];
+            }
+            else
+            {
+              $image_name = time() . $_FILES['image']['name'];
+              $tmp_name = $_FILES['image']['tmp_name'];
+              $img_location = "./upload/$image_name";
+              move_uploaded_file($tmp_name,$img_location);
+            }
+            $updateStatement = "UPDATE `employees` SET `name`='$name',`email`='$email',`phone`='$phone',`deptID`=$deptID , `salary`='$salary' , `img_location` = '$image_name' WHERE id = $id" ;
             mysqli_query($connection,$updateStatement);
             path('/employees/list.php');
           }
           $selectDep = "SELECT * FROM dept";
-          $departments = mysqli_query($connection,  $selectDep);
+          $departments = mysqli_query($connection,  $selectDep); 
+        }
+        
 
           
        
 ?>
 
-<form class="container" action="" method="POST">
+<form class="container" action="" method="POST" enctype="multipart/form-data">
   <div class="form-group">
     <label for="exampleInputName">Name</label>
     <input type="text" class="form-control" name="empName" value ="<?php echo $row['empName'] ?>">
@@ -46,18 +56,22 @@ if(isset($_GET['edit']))
     <input type="email" class="form-control" name="empEmail" value ="<?php echo $row['email'] ?>">
   </div>
   <div class="form-group">
-    <label for="exampleInputPassword">Password</label>
-    <input type="text" class="form-control" name="empPass" value ="<?php echo $row1['mypass'] ?>">
+    <label for="exampleInputPhone">Phone</label>
+    <input type="text" class="form-control" name="empPhone" value ="<?php echo $row['phone'] ?>">
   </div>
   <div class="form-group">
     <label for="exampleInputSalary">Salary</label>
     <input type="text" class="form-control" name="empSalary" value ="<?php echo $row['salary'] ?>">
   </div>
   <div class="form-group">
+    <label for="exampleInputPicture">Employee Picture</label>
+    <input type="file" class="form-control" name="image" value ="<?php echo $row['img_location'] ?>">
+  </div>
+  <div class="form-group">
     <label>Department</label>
   <select class="form-control" name="depID">
       
-      <option disabled value="<?php echo $row['deptID'] ?>" selected> <?php echo $row['deptName'] ?></option>
+      <option value="<?php echo $row['deptID'] ?>" selected> <?php echo $row['deptName'] ?></option>
       
     <?php foreach($departments as $data){
       ?>

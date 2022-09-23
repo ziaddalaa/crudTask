@@ -4,6 +4,11 @@ include '../general/functions.php';
 include '../shared/header.php';
 include '../shared/navbar.php';
 
+auth();
+
+if ($_SESSION['admin']['adminRole'] != 0) {
+  path('404.php');
+}
 
 if(isset($_GET['btnAdd']))
   {

@@ -18,4 +18,12 @@ function path($go)
     location.replace('/crudTask/$go')
     </script>";
 }
+
+function auth()
+{
+
+    if (!$_SESSION['admin']) {
+        path("auth/login.php");
+    }
+}
  ?>
